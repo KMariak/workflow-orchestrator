@@ -7,6 +7,7 @@ Provides a thin REST API for starting processes, tracking status, and handling o
 
 ## Project Structure
 
+```bas
 workflow-orchestrator/
 ├─ pyproject.toml
 ├─ README.md
