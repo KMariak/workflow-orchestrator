@@ -20,7 +20,6 @@ class ProcessService:
         )
         pid = await self.repo.create(process)
 
-        # enqueue перший крок
         first = saga.steps[0]
         task_id = self.bus.enqueue(first.forward_task, payload or {})
         process.history.append({"step": first.name, "task_id": task_id, "state": "PENDING"})
