@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: orchestrator-redis
+    ports: ["6379:6379"]
+
+  api:
+    build: .
+    container_name: orchestrator-api
+    depends_on: [redis]
+    environment:
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "8080:8080"
+    command: >
+      uvicorn workflow_orchestrator.app:app
+      --host 0.0.0.0 --port 8080 --reload
+
+  worker:
+    build: .
+    container_name: orchestrator-worker
+    depends_on: [redis]
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: >
+      celery -A workflow_orchestrator.app.celery_app
+      worker -l info -Q default,io,long
