@@ -6,7 +6,7 @@ install:
 run:
 	PYTHONPATH=src uv run uvicorn workflow_orchestrator.app:app --reload --port 8080
 
-fmt:
+format:
 	ruff check --fix .
 
 lint:
