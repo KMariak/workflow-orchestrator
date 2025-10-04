@@ -1,13 +1,13 @@
 .PHONY: install run-api fmt lint
 
 install:
-\tpip install -e .
+	pip install -e .
 
-run-api:
-\tuvicorn workflow_orchestrator.app:app --reload --port 8080
+run:
+	PYTHONPATH=src uv run uvicorn workflow_orchestrator.app:app --reload --port 8080
 
 fmt:
-\truff check --fix .
+	ruff check --fix .
 
 lint:
-\truff check .
+	ruff check .

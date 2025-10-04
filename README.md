@@ -7,7 +7,7 @@ Provides a thin REST API for starting processes, tracking status, and handling o
 
 ## Project Structure
 
-```bas
+```bash
 workflow-orchestrator/
 ├─ pyproject.toml
 ├─ README.md
@@ -47,18 +47,34 @@ workflow-orchestrator/
 
 ---
 
-## Getting Started
+Got it — let’s simplify and rewrite your README in clear English.
 
-```bash
-# install dependencies
-pip install -e .
+⸻
 
-# run API
-uvicorn workflow_orchestrator.api.main:app --reload --port 8080
+Workflow Orchestrator
 
-# run Celery worker
-celery -A workflow_orchestrator.app.celery_app worker -l info
+A service for orchestrating workflows and tasks.
+Built with FastAPI (API) and Celery (task engine).
+Dependencies managed with uv.
 
-# run Celery beat (optional for scheduled jobs)
-celery -A workflow_orchestrator.app.celery_app beat -l info
+⸻
+
+Getting Started
+1. Install dependencies
+uv venv
+uv sync
+source .venv/bin/activate
+
+2. Run the API
+uv run uvicorn --app-dir src workflow_orchestrator.api.main:app --reload --port 8080
+
+Docs: http://127.0.0.1:8080/docs
+
+3. Run a Celery worker
+
+uv run celery -A workflow_orchestrator.app.celery_app worker -l info -Q default,io,long
+
+4. Run Celery beat (optional)
+
+uv run celery -A workflow_orchestrator.app.celery_app beat -l info
 
