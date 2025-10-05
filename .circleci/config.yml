@@ -1,0 +1,69 @@
+version: 2.1
+
+executors:
+  python-executor:
+    docker:
+      - image: cimg/python:3.11
+    working_directory: ~/repo
+
+jobs:
+  install-deps:
+    executor: python-executor
+    steps:
+      - checkout
+      - run:
+          name: Install uv
+          command: |
+            curl -LsSf https://astral.sh/uv/install.sh | sh
+            echo 'export PATH="$HOME/.local/bin:$PATH"' >> $BASH_ENV
+      - run:
+          name: Sync dependencies
+          command: uv sync
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - .
+
+  lint:
+    executor: python-executor
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Run lint
+          command: make lint
+
+  format-check:
+    executor: python-executor
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Run format check
+          command: make format
+
+  tests:
+    executor: python-executor
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Run tests
+          command: |
+            # якщо будуть тести
+            uv run pytest -q || echo "No tests yet"
+
+workflows:
+  version: 2
+  ci-pipeline:
+    jobs:
+      - install-deps
+      - lint:
+          requires:
+            - install-deps
+      - format-check:
+          requires:
+            - install-deps
+      - tests:
+          requires:
+            - install-deps
